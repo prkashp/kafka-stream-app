@@ -35,3 +35,4 @@ target/*
 .int-test-state/*
 data
 data/*
+.vscode
