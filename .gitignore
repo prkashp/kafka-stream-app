@@ -1,8 +1,7 @@
-# gradle file
-.gradle
+.gradle/
+build/
 # Compiled class file
 *.class
-/bin
 
 # Log file
 *.log
@@ -22,6 +21,7 @@
 *.tar.gz
 *.rar
 
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 .idea
@@ -35,4 +35,3 @@ target/*
 .int-test-state/*
 data
 data/*
-.vscode

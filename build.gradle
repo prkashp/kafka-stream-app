@@ -9,16 +9,22 @@ buildscript {
 
 plugins {
     id "java"
+    id "com.google.cloud.tools.jib" version "3.3.1"
     id "idea"
     id "eclipse"
+    id "application"
 }
 
-sourceCompatibility = "1.11"
-targetCompatibility = "1.11"
 version = "0.0.1"
+sourceCompatibility = JavaVersion.VERSION_17
+targetCompatibility = JavaVersion.VERSION_17
+application {
+  mainClass.set("io.confluent.developer.KafkaStreamsApplication")
+}
 
 repositories {
     mavenCentral()
+
 
     maven {
         url "https://packages.confluent.io/maven"
@@ -36,16 +42,24 @@ dependencies {
     testImplementation 'org.hamcrest:hamcrest:2.2'
 }
 
-jar {
-    manifest {
-        attributes(
-                "Class-Path": configurations.compileClasspath.collect { it.getName() }.join(" "),
-                "Main-Class": "examples.ProducerExample"
-        )
+test {
+    testLogging {
+        outputs.upToDateWhen { false }
+        showStandardStreams = true
+        exceptionFormat = "full"
     }
 }
 
+jar {
+  manifest {
+    attributes(
+      "Class-Path": configurations.compileClasspath.collect { it.getName() }.join(" "),
+      "Main-Class": "io.confluent.developer.KafkaStreamsApplication"
+    )
+  }
+}
+
 shadowJar {
-    archiveBaseName = "kafka-java-getting-started"
+    archivesBaseName = "creating-first-apache-kafka-streams-application-standalone"
     archiveClassifier = ''
 }
