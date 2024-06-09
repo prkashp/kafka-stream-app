@@ -40,24 +40,26 @@ public class KafkaStreamsApplication {
 
         logger.info("Streams Closed");
     }
+
     static Topology buildTopology(String inputTopic, String outputTopic) {
         Serde<String> stringSerde = Serdes.String();
 
         StreamsBuilder builder = new StreamsBuilder();
 
         builder
-            .stream(inputTopic, Consumed.with(stringSerde, stringSerde))
-            .peek((k,v) -> logger.info("Observed event: {}", v))
-            .mapValues(s -> s.toUpperCase())
-            .peek((k,v) -> logger.info("Transformed event: {}", v))
-            .to(outputTopic, Produced.with(stringSerde, stringSerde));
+                .stream(inputTopic, Consumed.with(stringSerde, stringSerde))
+                .peek((k, v) -> logger.info("Observed event: {}", v))
+                .mapValues(s -> s.toUpperCase())
+                .peek((k, v) -> logger.info("Transformed event: {}", v))
+                .to(outputTopic, Produced.with(stringSerde, stringSerde));
 
         return builder.build();
     }
+
     public static void main(String[] args) throws Exception {
 
         if (args.length < 1) {
-            throw new IllegalArgumentException("This program takes one argument: the path to a configuration file.");
+            throw new IllegalArgumentException("This program takes one argument: the path to a config file.");
         }
 
         Properties props = new Properties();
@@ -76,7 +78,8 @@ public class KafkaStreamsApplication {
                             new NewTopic(inputTopic, Optional.empty(), Optional.empty()),
                             new NewTopic(outputTopic, Optional.empty(), Optional.empty())));
 
-            // Ramdomizer only used to produce sample data for this application, not typical usage
+            // Ramdomizer only used to produce sample data for this application, not typical
+            // usage
             try (Util.Randomizer rando = utility.startNewRandomizer(props, inputTopic)) {
 
                 KafkaStreams kafkaStreams = new KafkaStreams(
@@ -85,7 +88,7 @@ public class KafkaStreamsApplication {
 
                 Runtime.getRuntime().addShutdownHook(new Thread(kafkaStreams::close));
 
-                logger.info("Kafka Streams 101 App Started");
+                logger.info("Kafka Streams App Started");
                 runKafkaStreams(kafkaStreams);
 
             }

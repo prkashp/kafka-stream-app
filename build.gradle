@@ -60,6 +60,6 @@ jar {
 }
 
 shadowJar {
-    archivesBaseName = "creating-first-apache-kafka-streams-application-standalone"
+    archivesBaseName = "kafka-streams-application-standalone"
     archiveClassifier = ''
 }

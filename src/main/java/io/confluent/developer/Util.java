@@ -34,7 +34,7 @@ public class Util implements AutoCloseable {
         }
 
         public void run() {
-            try (KafkaProducer producer = new KafkaProducer<String, String>(props)) {
+            try (KafkaProducer<String, String> producer = new KafkaProducer<String, String>(props)) {
                 Faker faker = new Faker();
                 while (!closed) {
                     try {
@@ -49,7 +49,8 @@ public class Util implements AutoCloseable {
                 logger.error(ex.toString());
             }
         }
-        public void close()  {
+
+        public void close() {
             closed = true;
         }
     }
@@ -65,7 +66,7 @@ public class Util implements AutoCloseable {
         try (final AdminClient client = AdminClient.create(allProps)) {
             logger.info("Creating topics");
 
-            client.createTopics(topics).values().forEach( (topic, future) -> {
+            client.createTopics(topics).values().forEach((topic, future) -> {
                 try {
                     future.get();
                 } catch (Exception ex) {
@@ -74,16 +75,16 @@ public class Util implements AutoCloseable {
             });
 
             Collection<String> topicNames = topics
-                .stream()
-                .map(t -> t.name())
-                .collect(Collectors.toCollection(LinkedList::new));
+                    .stream()
+                    .map(t -> t.name())
+                    .collect(Collectors.toCollection(LinkedList::new));
 
-            logger.info("Asking cluster for topic descriptions");
+            logger.info("Asking cluster for topic description");
             client
-                .describeTopics(topicNames)
-                .allTopicNames()
-                .get(10, TimeUnit.SECONDS)
-                .forEach((name, description) -> logger.info("Topic Description: {}", description.toString()));
+                    .describeTopics(topicNames)
+                    .allTopicNames()
+                    .get(10, TimeUnit.SECONDS)
+                    .forEach((name, description) -> logger.info("Topic Description: {}", description.toString()));
         }
     }
 
